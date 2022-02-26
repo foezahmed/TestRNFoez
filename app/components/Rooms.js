@@ -7,7 +7,11 @@ import { Pressable, Stack, Text } from 'native-base';
 export default function Rooms({ navigation }) {
     const [rooms, setRooms] = useState([]);
     useEffect(() => {
-        onRefresh();
+        const unsubscribe = navigation.addListener('focus', () => {
+            onRefresh();
+        });
+
+        return unsubscribe;
     }, []);
 
     const onRefresh = () => {
@@ -26,7 +30,7 @@ export default function Rooms({ navigation }) {
                             user: null
                         };
                         if (chats && chats.length > 0) {
-                            var { [Object.keys(value).pop()]: lastChat } = value;
+                            var { [Object.keys(value).reverse().pop()]: lastChat } = value;
 
                             lastMessage = {
                                 ...lastMessage,
@@ -91,7 +95,7 @@ export default function Rooms({ navigation }) {
                                 <Stack>
                                     <Text fontSize={'xs'}>{`${new Date(
                                         createdAt
-                                    ).toLocaleTimeString()}`}</Text>
+                                    ).toLocaleString()}`}</Text>
                                 </Stack>
                             </Stack>
                         </Pressable>

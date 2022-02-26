@@ -1,11 +1,6 @@
 //@ts-check
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    Text,
-    TouchableOpacity} from 'react-native';
-import React from 'react';
+import { SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import {
     FacebookLogIn,
     GoogleLogIn,
@@ -18,7 +13,9 @@ import { Stack } from 'native-base';
 
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
+    const [error, setError] = useState('');
     const onGoogleSignIn = () => {
+        setError("");
         GoogleSignInInit();
         GoogleLogIn(
             (info) => {
@@ -29,22 +26,20 @@ const Login = ({ navigation }) => {
                     avatar: info.photo,
                     providerType: 'google'
                 };
+
                 dispatch(updateCurrentUser(user));
                 navigation.navigate('Rooms');
             },
             (error) => {
+                alert(error);
+                setError(JSON.stringify(error));
                 console.log(error);
             }
         );
     };
 
-    const onGoogleLogout = () => {
-        GoogleSignOut((error) => {
-            console.log(error);
-        });
-    };
-
     const onFBSignIn = () => {
+        setError("");
         FacebookLogIn(
             (info) => {
                 console.log(info);
@@ -55,9 +50,11 @@ const Login = ({ navigation }) => {
                     providerType: 'fb'
                 };
                 dispatch(updateCurrentUser(user));
-                navigation.navigate('Chat');
+                navigation.navigate('Rooms');
             },
             (error) => {
+                alert(error);
+                setError(JSON.stringify(error));
                 console.log(error);
             }
         );
@@ -117,6 +114,16 @@ const Login = ({ navigation }) => {
                             {'Sign In with Facebook'}
                         </Text>
                     </TouchableOpacity>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            textAlign: 'center',
+                            marginTop: 20,
+                            color: 'red'
+                            
+                        }}>
+                        {error}
+                    </Text>
                 </Stack>
             </ScrollView>
         </SafeAreaView>
@@ -124,4 +131,3 @@ const Login = ({ navigation }) => {
 };
 
 export default Login;
-
