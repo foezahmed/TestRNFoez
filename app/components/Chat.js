@@ -1,10 +1,5 @@
 //@ts-check
-import {
-    SafeAreaView,
-    Text,
-    View,
-    Image
-} from 'react-native';
+import { SafeAreaView, Text, View, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import database from '@react-native-firebase/database';
 import { Box, Button, Flex, Input, Stack } from 'native-base';
@@ -12,7 +7,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 const PROFILE_ICON_HEIGHT = 100;
 
-const Chat = () => {
+const Chat = ({ navigation }) => {
     const currentUser = useSelector((state) => state.user.value);
     const [room, setRoom] = useState('');
     const [roomAdded, setRoomAdded] = useState(false);
@@ -21,6 +16,7 @@ const Chat = () => {
     useEffect(() => {
         var onValueChange = () => {};
         if (roomAdded) {
+            navigation.setOptions({ title: `Chat - ${room || ''}` });
             onValueChange = database()
                 .ref(`/rooms/${room}`)
                 .on('value', (snapshot) => {
@@ -33,7 +29,11 @@ const Chat = () => {
                             }
                             messagesFetched.push(value);
                         }
-                        setMessages(messagesFetched);
+                        var sorted = messagesFetched.sort(
+                            (a, b) =>
+                                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                        );
+                        setMessages(sorted);
                     }
                     console.log('User data: ', snapshot.val());
                 });
@@ -42,7 +42,11 @@ const Chat = () => {
     }, [roomAdded]);
 
     const addMessage = (text) => {
-        database().ref(`/rooms/${room}`).push(text[0]);
+        var message = {
+            ...text[0],
+            createdAt: new Date().toISOString()
+        };
+        database().ref(`/rooms/${room}`).push(message);
     };
 
     return (
@@ -83,7 +87,7 @@ const Chat = () => {
                                 height: PROFILE_ICON_HEIGHT,
                                 width: PROFILE_ICON_HEIGHT,
                                 borderRadius: PROFILE_ICON_HEIGHT / 2,
-                                borderColor: "white",
+                                borderColor: 'white',
                                 borderWidth: 2,
                                 overflow: 'hidden',
                                 marginBottom: 8
@@ -101,7 +105,7 @@ const Chat = () => {
                         </View>
                         <View
                             style={{
-                                backgroundColor: "white",
+                                backgroundColor: 'white',
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 borderRadius: 24,
@@ -117,16 +121,15 @@ const Chat = () => {
                                 {currentUser.name}
                             </Text>
                         </View>
-                        
                     </View>
-                    <Box alignItems="center" >
+                    <Box alignItems="center">
                         <Input
-                            variant={"filled"}
+                            variant={'filled'}
                             w="75%"
                             maxW="300px"
                             py="0"
                             my={'6'}
-                            fontSize={"md"}
+                            fontSize={'md'}
                             placeholder="Set room name"
                             onChangeText={(text) => {
                                 setRoom(text);
