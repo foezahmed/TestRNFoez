@@ -29,6 +29,9 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { GoogleSigninButton } from '@react-native-community/google-signin';
 import { FacebookLogIn, GoogleLogIn, GoogleSignInInit } from './app/services/SocialLoginServices';
+import { Provider } from 'react-redux';
+import reduxStore from './app/redux/rootReducer';
+import store from './app/redux/store';
 
 const Section = ({ children, title }): Node => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -87,42 +90,44 @@ const App: () => Node = () => {
     };
 
     return (
-        <SafeAreaView style={backgroundStyle}>
-            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-            <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
-                <View
-                    style={{
-                        flexDirection: 'column'
-                    }}>
-                    <GoogleSigninButton
-                        size={GoogleSigninButton.Size.Wide}
-                        color={GoogleSigninButton.Color.Dark}
-                        onPress={() => onSignIn()}
-                    />
-                    <TouchableOpacity
+        <Provider store={store}>
+            <SafeAreaView style={backgroundStyle}>
+                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+                <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
+                    <View
                         style={{
-                            // width: 132,
-                            // height: 40,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: '#2d88ff',
-                            borderRadius: 20,
-                            paddingHorizontal: 20,
-                            paddingVertical: 8,
-                            justifyContent: 'center',
-                            marginRight: 12
-                        }}
-                        onPress={() => onFBSignIn()}>
-                        <Text
+                            flexDirection: 'column'
+                        }}>
+                        <GoogleSigninButton
+                            size={GoogleSigninButton.Size.Wide}
+                            color={GoogleSigninButton.Color.Dark}
+                            onPress={() => onSignIn()}
+                        />
+                        <TouchableOpacity
                             style={{
-                                fontSize: 16
-                            }}>
-                            {'Sign In with Facebook'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                                // width: 132,
+                                // height: 40,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#2d88ff',
+                                borderRadius: 20,
+                                paddingHorizontal: 20,
+                                paddingVertical: 8,
+                                justifyContent: 'center',
+                                marginRight: 12
+                            }}
+                            onPress={() => onFBSignIn()}>
+                            <Text
+                                style={{
+                                    fontSize: 16
+                                }}>
+                                {'Sign In with Facebook'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+        </Provider>
     );
 };
 
