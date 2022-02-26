@@ -20,18 +20,14 @@ import {
 import database from '@react-native-firebase/database';
 import { Box, Button, Flex, Input, Stack } from 'native-base';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-// import { firebase } from '@react-native-firebase/database';
-
-// const reference = firebase
-//     .app()
-//     .database('https://test-reacnative-aa98f-default-rtdb.asia-southeast1.firebasedatabase.app/')
-//     .ref('/rooms/123');
+import { GiftedChat } from 'react-native-gifted-chat';
 
 const Chat = () => {
     const [value, setValue] = useState('');
     const [room, setRoom] = useState('');
     const [roomAdded, setRoomAdded] = useState(false);
     const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         var onValueChange = () => {};
@@ -39,6 +35,14 @@ const Chat = () => {
             onValueChange = database()
                 .ref(`/rooms/${room}`)
                 .on('value', (snapshot) => {
+                    var snapshotValue = snapshot.val();
+                    if (snapshotValue) {
+                        var messagesFetched = [];
+                        for (const [key, value] of Object.entries(snapshotValue)) {
+                            messagesFetched.push(value);
+                        }
+                        setMessages(messagesFetched);
+                    }
                     console.log('User data: ', snapshot.val());
                     setValue(JSON.stringify(snapshot.val()));
                 });
@@ -48,11 +52,7 @@ const Chat = () => {
     }, [roomAdded]);
 
     const addMessage = (text) => {
-        database().ref(`/rooms/${room}`).push({
-            message: text,
-            userId: 'dfsfdfsdfsdfs',
-            created: new Date().toISOString()
-        });
+        database().ref(`/rooms/${room}`).push(text[0]);
     };
 
     return (
@@ -63,24 +63,29 @@ const Chat = () => {
             }}>
             {roomAdded ? (
                 <Flex flexDirection={'column'} position={'relative'} h={'full'}>
-                    <Text>{value}</Text>
-                    <Stack
+                    <GiftedChat
+                        messages={messages}
+                        onSend={(message) => addMessage(message)}
+                        user={{
+                            _id: 1
+                        }}
+                    />
+                    {/* <Stack
                         direction={'row'}
                         width={'full'}
                         px={2}
                         position={'absolute'}
                         bottom={0}
-                        bg={"black"}
+                        bg={'black'}
                         py={6}>
                         <Input
                             flex={1}
                             value={message}
-                            placeholder={"Send message"}
+                            placeholder={'Send message'}
                             onChangeText={(text) => {
                                 setMessage(text);
                             }}
-                            mr={1}
-                            ></Input>
+                            mr={1}></Input>
                         <Button
                             size="xs"
                             rounded="none"
@@ -92,7 +97,7 @@ const Chat = () => {
                             }}>
                             {'Send'}
                         </Button>
-                    </Stack>
+                    </Stack> */}
                 </Flex>
             ) : (
                 <View>
