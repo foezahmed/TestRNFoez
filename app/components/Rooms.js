@@ -2,10 +2,23 @@
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import database from '@react-native-firebase/database';
-import { Pressable, Stack, Text } from 'native-base';
+import {
+    Box,
+    Button,
+    Fab,
+    Icon as NBIcon,
+    Input,
+    Modal,
+    Pressable,
+    Stack,
+    Text
+} from 'native-base';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default function Rooms({ navigation }) {
     const [rooms, setRooms] = useState([]);
+    const [showNewRoom, setShowNewRoom] = useState(false);
+    const [room, setRoom] = useState('');
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             onRefresh();
@@ -43,14 +56,70 @@ export default function Rooms({ navigation }) {
 
                         roomsFetched.push(lastMessage);
                     }
+                    var sorted = roomsFetched
+                        .sort(
+                            (a, b) =>
+                                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                        )
+                        .reverse();
 
-                    setRooms(roomsFetched.reverse());
+                    setRooms(sorted);
                     console.log('User data: ', JSON.stringify(roomsFetched));
                 }
             });
     };
     return (
-        <View>
+        <Box position={'relative'} flex={1}>
+            <Fab
+                position={'absolute'}
+                bottom={6}
+                right={6}
+                placement="bottom-right"
+                renderInPortal={false}
+                size="lg"
+                icon={<NBIcon name="plus" as={AntDesign} />}
+                onPress={() => setShowNewRoom(true)}
+            />
+            <Modal
+                isOpen={showNewRoom}
+                onClose={() => {
+                    setRoom('');
+                    setShowNewRoom(false);
+                }}>
+                <Modal.Content>
+                    <Modal.Header>Create Room</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
+                        <Box alignItems="center">
+                            <Input
+                                variant={'filled'}
+                                w="75%"
+                                maxW="300px"
+                                // py="0"
+                                my={'6'}
+                                fontSize={'md'}
+                                placeholder="Set room name"
+                                onChangeText={(text) => {
+                                    setRoom(text);
+                                }}
+                            />
+                        </Box>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button.Group space={2}>
+                            <Button
+                                onPress={() => {
+                                    if (!room) return;
+                                    navigation.navigate('Chat', { roomName: room });
+                                    setShowNewRoom(false);
+                                    setRoom('');
+                                }}>
+                                Create
+                            </Button>
+                        </Button.Group>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal>
             <FlatList
                 style={{}}
                 data={rooms}
@@ -60,7 +129,7 @@ export default function Rooms({ navigation }) {
                 refreshControl={
                     <RefreshControl colors={['red']} refreshing={false} onRefresh={onRefresh} />
                 }
-                keyExtractor={(item, index) => item.name + index}
+                keyExtractor={(item, index) => item.roomName + index}
                 // ListHeaderComponent={
                 //     <>
 
@@ -75,7 +144,6 @@ export default function Rooms({ navigation }) {
                     const { roomName, text, createdAt, user } = listItem.item;
                     return (
                         <Pressable
-                            key={roomName + listItem.index}
                             onPress={() => {
                                 navigation.navigate('Chat', { roomName });
                             }}>
@@ -102,7 +170,7 @@ export default function Rooms({ navigation }) {
                     );
                 }}
             />
-        </View>
+        </Box>
     );
 }
 

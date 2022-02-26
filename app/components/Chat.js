@@ -33,7 +33,7 @@ const Chat = ({ navigation, route }) => {
                         var sorted = messagesFetched.sort(
                             (a, b) =>
                                 new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-                        );
+                        ).reverse();
                         setMessages(sorted);
                     }
                     console.log('User data: ', snapshot.val());
