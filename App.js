@@ -28,10 +28,21 @@ import {
     ReloadInstructions
 } from 'react-native/Libraries/NewAppScreen';
 import { GoogleSigninButton } from '@react-native-community/google-signin';
-import { FacebookLogIn, GoogleLogIn, GoogleSignInInit } from './app/services/SocialLoginServices';
+import {
+    FacebookLogIn,
+    GoogleLogIn,
+    GoogleSignInInit,
+    GoogleSignOut
+} from './app/services/SocialLoginServices';
 import { Provider } from 'react-redux';
 import reduxStore from './app/redux/rootReducer';
 import store from './app/redux/store';
+import { NavigationContainer } from '@react-navigation/native';
+import Login from './app/components/Login';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Chat from './app/components/Chat';
+
+const Stack = createNativeStackNavigator();
 
 const Section = ({ children, title }): Node => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -62,71 +73,14 @@ const Section = ({ children, title }): Node => {
 const App: () => Node = () => {
     const isDarkMode = useColorScheme() === 'dark';
 
-    const backgroundStyle = {
-        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
-    };
-
-    const onSignIn = () => {
-        GoogleSignInInit();
-        GoogleLogIn(
-            (info) => {
-                console.log(info);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
-    };
-
-    const onFBSignIn = () => {
-        FacebookLogIn(
-            (info) => {
-                console.log(info);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
-    };
-
     return (
         <Provider store={store}>
-            <SafeAreaView style={backgroundStyle}>
-                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-                <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
-                    <View
-                        style={{
-                            flexDirection: 'column'
-                        }}>
-                        <GoogleSigninButton
-                            size={GoogleSigninButton.Size.Wide}
-                            color={GoogleSigninButton.Color.Dark}
-                            onPress={() => onSignIn()}
-                        />
-                        <TouchableOpacity
-                            style={{
-                                // width: 132,
-                                // height: 40,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                backgroundColor: '#2d88ff',
-                                borderRadius: 20,
-                                paddingHorizontal: 20,
-                                paddingVertical: 8,
-                                justifyContent: 'center',
-                                marginRight: 12
-                            }}
-                            onPress={() => onFBSignIn()}>
-                            <Text
-                                style={{
-                                    fontSize: 16
-                                }}>
-                                {'Sign In with Facebook'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName="Login">
+                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="Chat" component={Chat} />
+                </Stack.Navigator>
+            </NavigationContainer>
         </Provider>
     );
 };
