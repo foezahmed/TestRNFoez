@@ -3,14 +3,9 @@ import {
     SafeAreaView,
     ScrollView,
     StatusBar,
-    StyleSheet,
     Text,
-    TouchableOpacity,
-    useColorScheme,
-    View
-} from 'react-native';
+    TouchableOpacity} from 'react-native';
 import React from 'react';
-import { GoogleSigninButton } from '@react-native-community/google-signin';
 import {
     FacebookLogIn,
     GoogleLogIn,
@@ -19,10 +14,11 @@ import {
 } from '../../app/services/SocialLoginServices';
 import { useDispatch } from 'react-redux';
 import { updateCurrentUser } from '../redux/slices/userSlice';
+import { Stack } from 'native-base';
 
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
-    const onSignIn = () => {
+    const onGoogleSignIn = () => {
         GoogleSignInInit();
         GoogleLogIn(
             (info) => {
@@ -70,15 +66,35 @@ const Login = ({ navigation }) => {
         <SafeAreaView>
             <StatusBar barStyle={'dark-content'} />
             <ScrollView contentInsetAdjustmentBehavior="automatic">
-                <View
-                    style={{
-                        flexDirection: 'column'
-                    }}>
-                    <GoogleSigninButton
-                        size={GoogleSigninButton.Size.Wide}
-                        color={GoogleSigninButton.Color.Dark}
-                        onPress={() => onSignIn()}
-                    />
+                <Stack direction={'column'} mt={10} space={2} px={4} justifyContent={'center'}>
+                    <Text
+                        style={{
+                            fontSize: 30,
+                            textAlign: 'center',
+                            marginBottom: 20
+                        }}>
+                        {'Login'}
+                    </Text>
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'red',
+                            borderRadius: 20,
+                            paddingHorizontal: 20,
+                            paddingVertical: 12,
+                            justifyContent: 'center',
+                            marginRight: 12
+                        }}
+                        onPress={() => onGoogleSignIn()}>
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                color: 'white'
+                            }}>
+                            {'Sign In with Google'}
+                        </Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             // width: 132,
@@ -88,40 +104,20 @@ const Login = ({ navigation }) => {
                             backgroundColor: '#2d88ff',
                             borderRadius: 20,
                             paddingHorizontal: 20,
-                            paddingVertical: 8,
+                            paddingVertical: 12,
                             justifyContent: 'center',
                             marginRight: 12
                         }}
                         onPress={() => onFBSignIn()}>
                         <Text
                             style={{
-                                fontSize: 16
+                                fontSize: 16,
+                                color: 'white'
                             }}>
                             {'Sign In with Facebook'}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            // width: 132,
-                            // height: 40,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: '#2d88ff',
-                            borderRadius: 20,
-                            paddingHorizontal: 20,
-                            paddingVertical: 8,
-                            justifyContent: 'center',
-                            marginRight: 12
-                        }}
-                        onPress={() => onGoogleLogout()}>
-                        <Text
-                            style={{
-                                fontSize: 16
-                            }}>
-                            {'Logout'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                </Stack>
             </ScrollView>
         </SafeAreaView>
     );
@@ -129,21 +125,3 @@ const Login = ({ navigation }) => {
 
 export default Login;
 
-const styles = StyleSheet.create({
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600'
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400'
-    },
-    highlight: {
-        fontWeight: '700'
-    }
-});

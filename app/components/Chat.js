@@ -1,35 +1,21 @@
 //@ts-check
 import {
     SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
     Text,
-    TouchableOpacity,
-    useColorScheme,
-    View
+    View,
+    Image
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { GoogleSigninButton } from '@react-native-community/google-signin';
-import {
-    FacebookLogIn,
-    GoogleLogIn,
-    GoogleSignInInit,
-    GoogleSignOut
-} from '../../app/services/SocialLoginServices';
 import database from '@react-native-firebase/database';
 import { Box, Button, Flex, Input, Stack } from 'native-base';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
+const PROFILE_ICON_HEIGHT = 100;
 
 const Chat = () => {
     const currentUser = useSelector((state) => state.user.value);
-
-    const [value, setValue] = useState('');
     const [room, setRoom] = useState('');
     const [roomAdded, setRoomAdded] = useState(false);
-    const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
@@ -50,7 +36,6 @@ const Chat = () => {
                         setMessages(messagesFetched);
                     }
                     console.log('User data: ', snapshot.val());
-                    setValue(JSON.stringify(snapshot.val()));
                 });
         }
         return () => database().ref(`/rooms/${room}`).off('value', onValueChange);
@@ -77,13 +62,71 @@ const Chat = () => {
                     />
                 </Flex>
             ) : (
-                <View>
-                    <Box alignItems="center" justifyContent={'center'}>
+                <Stack pt={4}>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginBottom: 8
+                        }}>
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                marginBottom: 8
+                            }}>
+                            {'Continue as'}
+                        </Text>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: PROFILE_ICON_HEIGHT,
+                                width: PROFILE_ICON_HEIGHT,
+                                borderRadius: PROFILE_ICON_HEIGHT / 2,
+                                borderColor: "white",
+                                borderWidth: 2,
+                                overflow: 'hidden',
+                                marginBottom: 8
+                            }}>
+                            <Image
+                                source={{ uri: currentUser.avatar }}
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    height: '100%',
+                                    width: '100%'
+                                }}
+                                resizeMode={'cover'}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                borderRadius: 24,
+                                paddingHorizontal: 24,
+                                paddingVertical: 12,
+                                justifyContent: 'center',
+                                marginBottom: 8
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 16
+                                }}>
+                                {currentUser.name}
+                            </Text>
+                        </View>
+                        
+                    </View>
+                    <Box alignItems="center" >
                         <Input
+                            variant={"filled"}
                             w="75%"
                             maxW="300px"
                             py="0"
                             my={'6'}
+                            fontSize={"md"}
                             placeholder="Set room name"
                             onChangeText={(text) => {
                                 setRoom(text);
@@ -102,29 +145,10 @@ const Chat = () => {
                             {'Set'}
                         </Button>
                     </Box>
-                </View>
+                </Stack>
             )}
         </SafeAreaView>
     );
 };
 
 export default Chat;
-
-const styles = StyleSheet.create({
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600'
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400'
-    },
-    highlight: {
-        fontWeight: '700'
-    }
-});
