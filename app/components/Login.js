@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
                     providerType: 'google'
                 };
                 dispatch(updateCurrentUser(user));
-                navigation.navigate('Chat');
+                navigation.navigate('Rooms');
             },
             (error) => {
                 console.log(error);

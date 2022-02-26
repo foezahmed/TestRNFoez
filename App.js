@@ -18,6 +18,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chat from './app/components/Chat';
 import { firebaseInit } from './app/services/FirebaseService';
 import { NativeBaseProvider } from 'native-base';
+import Rooms from './app/components/Rooms';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const App: () => Node = () => {
                 <NavigationContainer>
                     <Stack.Navigator initialRouteName="Login">
                         <Stack.Screen name="Login" component={Login} />
+                        <Stack.Screen name="Rooms" component={Rooms} />
                         <Stack.Screen name="Chat" component={Chat} />
                     </Stack.Navigator>
                 </NavigationContainer>

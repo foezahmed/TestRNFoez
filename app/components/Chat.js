@@ -7,18 +7,19 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 const PROFILE_ICON_HEIGHT = 100;
 
-const Chat = ({ navigation }) => {
+const Chat = ({ navigation, route }) => {
+    const roomName = route.params?.roomName || ''
     const currentUser = useSelector((state) => state.user.value);
-    const [room, setRoom] = useState('');
-    const [roomAdded, setRoomAdded] = useState(false);
+    const [room, setRoom] = useState(roomName);
+    const [roomAdded, setRoomAdded] = useState(true);
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         var onValueChange = () => {};
         if (roomAdded) {
-            navigation.setOptions({ title: `Chat - ${room || ''}` });
+            navigation.setOptions({ title: `Chat - ${roomName || ''}` });
             onValueChange = database()
-                .ref(`/rooms/${room}`)
+                .ref(`/rooms/${roomName}`)
                 .on('value', (snapshot) => {
                     var snapshotValue = snapshot.val();
                     if (snapshotValue) {
@@ -38,7 +39,7 @@ const Chat = ({ navigation }) => {
                     console.log('User data: ', snapshot.val());
                 });
         }
-        return () => database().ref(`/rooms/${room}`).off('value', onValueChange);
+        return () => database().ref(`/rooms/${roomName}`).off('value', onValueChange);
     }, [roomAdded]);
 
     const addMessage = (text) => {
