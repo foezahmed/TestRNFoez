@@ -35,14 +35,17 @@ import {
     GoogleSignOut
 } from './app/services/SocialLoginServices';
 import { Provider } from 'react-redux';
-import reduxStore from './app/redux/rootReducer';
 import store from './app/redux/store';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './app/components/Login';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chat from './app/components/Chat';
+import { firebaseInit } from './app/services/FirebaseService';
+import { NativeBaseProvider } from 'native-base';
 
 const Stack = createNativeStackNavigator();
+
+firebaseInit();
 
 const Section = ({ children, title }): Node => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -74,14 +77,16 @@ const App: () => Node = () => {
     const isDarkMode = useColorScheme() === 'dark';
 
     return (
-        <Provider store={store}>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="Login">
-                    <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="Chat" component={Chat} />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </Provider>
+        <NativeBaseProvider>
+            <Provider store={store}>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="Login">
+                        <Stack.Screen name="Login" component={Login} />
+                        <Stack.Screen name="Chat" component={Chat} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </Provider>
+        </NativeBaseProvider>
     );
 };
 
