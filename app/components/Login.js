@@ -17,14 +17,24 @@ import {
     GoogleSignInInit,
     GoogleSignOut
 } from '../../app/services/SocialLoginServices';
+import { useDispatch } from 'react-redux';
+import { updateCurrentUser } from '../redux/slices/userSlice';
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
+    const dispatch = useDispatch();
     const onSignIn = () => {
         GoogleSignInInit();
         GoogleLogIn(
             (info) => {
                 console.log(info);
-                navigation.navigate('Chat')
+                var user = {
+                    _id: info.id,
+                    name: info.name,
+                    avatar: info.photo,
+                    providerType: 'google'
+                };
+                dispatch(updateCurrentUser(user));
+                navigation.navigate('Chat');
             },
             (error) => {
                 console.log(error);
@@ -42,6 +52,14 @@ const Login = ({navigation}) => {
         FacebookLogIn(
             (info) => {
                 console.log(info);
+                var user = {
+                    _id: info.id,
+                    name: info.name,
+                    avatar: info.photo,
+                    providerType: 'fb'
+                };
+                dispatch(updateCurrentUser(user));
+                navigation.navigate('Chat');
             },
             (error) => {
                 console.log(error);

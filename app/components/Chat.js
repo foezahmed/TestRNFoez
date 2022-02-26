@@ -21,8 +21,11 @@ import database from '@react-native-firebase/database';
 import { Box, Button, Flex, Input, Stack } from 'native-base';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { useSelector } from 'react-redux';
 
 const Chat = () => {
+    const currentUser = useSelector((state) => state.user.value);
+
     const [value, setValue] = useState('');
     const [room, setRoom] = useState('');
     const [roomAdded, setRoomAdded] = useState(false);
@@ -39,6 +42,9 @@ const Chat = () => {
                     if (snapshotValue) {
                         var messagesFetched = [];
                         for (const [key, value] of Object.entries(snapshotValue)) {
+                            if (currentUser._id === value.user._id) {
+                                value.user = { ...value.user, ...currentUser };
+                            }
                             messagesFetched.push(value);
                         }
                         setMessages(messagesFetched);
@@ -47,7 +53,6 @@ const Chat = () => {
                     setValue(JSON.stringify(snapshot.val()));
                 });
         }
-        // Stop listening for updates when no longer required
         return () => database().ref(`/rooms/${room}`).off('value', onValueChange);
     }, [roomAdded]);
 
@@ -67,37 +72,9 @@ const Chat = () => {
                         messages={messages}
                         onSend={(message) => addMessage(message)}
                         user={{
-                            _id: 1
+                            ...currentUser
                         }}
                     />
-                    {/* <Stack
-                        direction={'row'}
-                        width={'full'}
-                        px={2}
-                        position={'absolute'}
-                        bottom={0}
-                        bg={'black'}
-                        py={6}>
-                        <Input
-                            flex={1}
-                            value={message}
-                            placeholder={'Send message'}
-                            onChangeText={(text) => {
-                                setMessage(text);
-                            }}
-                            mr={1}></Input>
-                        <Button
-                            size="xs"
-                            rounded="none"
-                            onPress={(text) => {
-                                if (message) {
-                                    addMessage(message);
-                                    setMessage('');
-                                }
-                            }}>
-                            {'Send'}
-                        </Button>
-                    </Stack> */}
                 </Flex>
             ) : (
                 <View>
