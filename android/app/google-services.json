@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "85684263588",
+    "project_id": "test-reacnative-aa98f",
+    "storage_bucket": "test-reacnative-aa98f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85684263588:android:51ba7bcb1a28dd03d12431",
+        "android_client_info": {
+          "package_name": "com.testrnfoez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85684263588-5bqnr1ndja4u38niu7pum04gin4o5d0r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.testrnfoez",
+            "certificate_hash": "61e5aa362592dc09027db2ac8e37b2bd333a5672"
+          }
+        },
+        {
+          "client_id": "85684263588-7llco0p138ldoagba4381kv6acn1rvbj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.testrnfoez",
+            "certificate_hash": "2097758d2734cbf431b3e8470daf7cc5aaf64e3b"
+          }
+        },
+        {
+          "client_id": "85684263588-rv23cfcurlle0sf34aha2sef1bne5ac2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.testrnfoez",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "85684263588-7adg60jtivefn3odoh1u9ctvv94fm5se.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaezEMVmjAxn1NmRdSguHPuMI9HaXcEgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85684263588-7adg60jtivefn3odoh1u9ctvv94fm5se.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

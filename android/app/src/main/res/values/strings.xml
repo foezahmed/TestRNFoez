@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TestRNFoez</string>
+    <string name="facebook_app_id">360062845766302</string>
+    <string name="fb_login_protocol_scheme">fb360062845766302</string>
+</resources>
