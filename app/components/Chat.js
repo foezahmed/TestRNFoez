@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 const PROFILE_ICON_HEIGHT = 100;
 
 const Chat = ({ navigation, route }) => {
-    const roomName = route.params?.roomName || ''
+    const roomName = route.params?.roomName || '';
     const currentUser = useSelector((state) => state.user.value);
     const [room, setRoom] = useState(roomName);
     const [roomAdded, setRoomAdded] = useState(true);
@@ -30,10 +30,13 @@ const Chat = ({ navigation, route }) => {
                             }
                             messagesFetched.push(value);
                         }
-                        var sorted = messagesFetched.sort(
-                            (a, b) =>
-                                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-                        ).reverse();
+                        var sorted = messagesFetched
+                            .sort(
+                                (a, b) =>
+                                    new Date(a.createdAt).getTime() -
+                                    new Date(b.createdAt).getTime()
+                            )
+                            .reverse();
                         setMessages(sorted);
                     }
                     console.log('User data: ', snapshot.val());
@@ -64,6 +67,8 @@ const Chat = ({ navigation, route }) => {
                         user={{
                             ...currentUser
                         }}
+                        // @ts-ignore
+                        textInputStyle={{ color: 'black' }}
                     />
                 </Flex>
             ) : (
